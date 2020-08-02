@@ -19,14 +19,7 @@ def GetCP(Skin):
         SearchJson = SearchRequest.json()
         check(SearchJson)
 
-        CidRequest = requests.get(PropertiesURL + SearchJson['data']['path'])
-        CidJson = CidRequest.json()
-        check(CidJson)
-        x = 0
-        for len in CidJson["import_map"]:
-            if "/HID_" in CidJson["import_map"][x]["object_name"]:
-                HID = CidJson["import_map"][x]["object_name"]
-            x += 1
+        HID = SearchJson['data']['definitionPath']
     else:
         HID = Skin
     HidRequest = requests.get(PropertiesURL + HID)
