@@ -1,7 +1,7 @@
 #I know the code is kinda messy. It's made just to work for now
 import requests
 
-SearchURL = 'https://benbotfn.tk/api/v1/cosmetics/br/search?backendType=AthenaCharacter&name='
+SearchURL = 'https://fortnite-api.com/v2/cosmetics/br/search?backendType=AthenaCharacter&matchMethod=contains&name='
 PropertiesURL = 'https://benbotfn.tk/api/v1/assetProperties?path='
 
 def check(data):
@@ -19,7 +19,7 @@ def GetCP(Skin):
         SearchJson = SearchRequest.json()
         check(SearchJson)
 
-        CidRequest = requests.get(PropertiesURL + SearchJson['path'])
+        CidRequest = requests.get(PropertiesURL + SearchJson['data']['path'])
         CidJson = CidRequest.json()
         check(CidJson)
         x = 0
