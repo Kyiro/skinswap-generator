@@ -1,78 +1,61 @@
-#I know the code is kinda messy. It's made just to work for now
 import requests
 
 SearchURL = 'https://fortnite-api.com/v2/cosmetics/br/search?backendType=AthenaCharacter&matchMethod=contains&name='
 PropertiesURL = 'https://benbotfn.tk/api/v1/assetProperties?path='
 
-def check(data):
-    try:
-        if data["error"]:
-            print("\nSomething went wrong!")
-            print(data)
-            exit()
-    except KeyError:
-        return
+class GetCP:
+    def __init__(self, name):
+        if not "/HID_" in name:
+            Search = requests.get(SearchURL + name).json()
+            HID = Search['data']['definitionPath']
+            CID = Search['data']['path']
+            CID = CID.replace("FortniteGame/Content", "/Game")
+            CID = CID + "." + Search['data']['id']
+        else:
+            HID = name
+        HSsearch = requests.get(PropertiesURL + HID).json()
+        if "/HS_" in HSsearch["export_properties"][0]["Specializations"][0]["assetPath"]:
+            HS = HSsearch["export_properties"][0]["Specializations"][0]["assetPath"]
+        else:
+            print("Couldn't find the HS")
+        CPsearch = requests.get(PropertiesURL + HS).json()
+        x = 0
+        CPs = []
+        for len in CPsearch["export_properties"][0]["CharacterParts"]:
+            item = CPsearch["export_properties"][0]["CharacterParts"][x]["assetPath"]
+            if "Bodies" in item:
+                CPs.insert(0, item)
+                print("Found the Body")
+            else:
+                CPs.insert(1, item)
+                print("Didn't find the body")
+            x += 1
+        NormalCP = CPs[0].split("/")[-1].split(".")[0]
+        BrokenCP = NormalCP.replace("CP_", "1P_")
+        self.replaceCPs = [NormalCP, BrokenCP]
+        self.array = CPs
+        self.CID = CID
 
-def GetCP(Skin):
-    if not "/HID_" in Skin:
-        SearchRequest = requests.get(SearchURL + Skin)
-        SearchJson = SearchRequest.json()
-        check(SearchJson)
-
-        HID = SearchJson['data']['definitionPath']
-    else:
-        HID = Skin
-    HidRequest = requests.get(PropertiesURL + HID)
-    HidJson = HidRequest.json()
-    check(HidJson)
-    if "/HS_" in HidJson["export_properties"][0]["Specializations"][0]["assetPath"]:
-        HS = HidJson["export_properties"][0]["Specializations"][0]["assetPath"]
-    else:
-        print("Couldn't find the HS")
-
-    HsRequest = requests.get(PropertiesURL + HS)
-    HsJson = HsRequest.json()
-    check(HidJson)
-    x = 0
-    CPs = []
-    for len in HsJson["export_properties"][0]["CharacterParts"]:
-        CPs.append(HsJson["export_properties"][0]["CharacterParts"][x]["assetPath"])
-        x += 1
-    return CPs
-
-print("What skin do you want to replace?")
-BaseSkin = input()
+print("What skin do you want to Replace?")
+Base = GetCP(input())
 print("What skin do you want to swap for?")
-ReplaceSkin = input()
-Base = GetCP(BaseSkin)
-Replace = GetCP(ReplaceSkin)
+Replace = GetCP(input())
 
-if len(Replace) > 2:
-    print(Replace)
-    print(f"\nWhich CP/CPs would you like to remove? {len(Replace) - 2} CP/CPs to remove")
-    while len(Replace) > 2:
+if len(Replace.array) > 2:
+    print(Replace.array)
+    print(f"\nWhich CP/CPs would you like to remove? {len(Replace.array) - 2} CP/CPs to remove")
+    while len(Replace.array) > 2:
         number = int(input()) - 1
-        Replace.pop(number)
-
-
+        Replace.array.pop(number)
 
 file = open("output.txt","w+")
-#x = 0
-#for len in Replace:
-#    file.write(Replace[x] + "\n")
-#    x += 1
-
-#I know this part of the code is terrible and hardcoded but i'll fix it later
-NormalCP = Base[0].split("/")
-NormalCP = NormalCP[len(NormalCP) - 1].split(".")[0]
-BrokenCP = NormalCP.replace("CP_", "1P_")
 
 file.write("Generated using Kyiro#6468 skin swap tool\n")
-file.write(NormalCP + "\n")
-file.write(BrokenCP + "\n\n")
+file.write(Base.CID + "\n")
+file.write(Replace.CID + "\n\n")
+file.write(Base.replaceCPs[0] + "\n")
+file.write(Base.replaceCPs[1] + "\n\n")
 file.write("/Game/Athena/Heroes/Meshes/Bodies/CP_Body_Commando_F_RebirthDefaultA.CP_Body_Commando_F_RebirthDefaultA" + "\n")
-file.write(Replace[0] + "\n\n")
+file.write(Replace.array[0] + "\n\n")
 file.write("/Game/Characters/CharacterParts/Female/Medium/Heads/CP_Head_F_RebirthDefaultA.CP_Head_F_RebirthDefaultA" + "\n")
-file.write(Replace[1])
-
-
+file.write(Replace.array[1] + "\n")
