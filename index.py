@@ -25,10 +25,8 @@ class GetCP:
             item = CPsearch["export_properties"][0]["CharacterParts"][x]["assetPath"]
             if "Bodies" in item:
                 CPs.insert(0, item)
-                print("Found the Body")
             else:
                 CPs.insert(1, item)
-                print("Didn't find the body")
             x += 1
         NormalCP = CPs[0].split("/")[-1].split(".")[0]
         BrokenCP = NormalCP.replace("CP_", "1P_")
