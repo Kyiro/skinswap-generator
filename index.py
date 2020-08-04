@@ -25,8 +25,12 @@ class GetCP:
             item = CPsearch["export_properties"][0]["CharacterParts"][x]["assetPath"]
             if "Bodies" in item:
                 CPs.insert(0, item)
-            else:
+            elif "Head" in item:
                 CPs.insert(1, item)
+            elif "FaceAcc" or "Hat" in item:
+                CPs.insert(2, item)
+            else:
+                CPs.insert(3, item)
             x += 1
         NormalCP = CPs[0].split("/")[-1].split(".")[0]
         BrokenCP = NormalCP.replace("CP_", "1P_")
@@ -35,7 +39,11 @@ class GetCP:
         self.CID = CID
 
 print("What skin do you want to Replace?")
-Base = GetCP(input())
+Base = input()
+if Base.lower() == "recruit":
+    Base = 1
+else:
+    Base = GetCP(Base)
 print("What skin do you want to swap for?")
 Replace = GetCP(input())
 
@@ -49,10 +57,16 @@ if len(Replace.array) > 2:
 file = open("output.txt","w+")
 
 file.write("Generated using Kyiro#6468 skin swap tool\n")
-file.write(Base.CID + "\n")
-file.write(Replace.CID + "\n\n")
-file.write(Base.replaceCPs[0] + "\n")
-file.write(Base.replaceCPs[1] + "\n\n")
+if not Base == 1:
+    file.write(Base.CID + "\n")
+    file.write(Replace.CID + "\n\n")
+    file.write(Base.replaceCPs[0] + "\n")
+    file.write(Base.replaceCPs[1] + "\n\n")
+elif Base == 1:
+    file.write("CP_Body_Commando_F_RebirthDefaultA" + "\n")
+    file.write("1P_Body_Commando_F_RebirthDefaultA" + "\n\n")
+    file.write("CP_Athena_Body_M_RebirthSoldierA" + "\n")
+    file.write("1P_Athena_Body_M_RebirthSoldierA" + "\n\n")
 file.write("/Game/Athena/Heroes/Meshes/Bodies/CP_Body_Commando_F_RebirthDefaultA.CP_Body_Commando_F_RebirthDefaultA" + "\n")
 file.write(Replace.array[0] + "\n\n")
 file.write("/Game/Characters/CharacterParts/Female/Medium/Heads/CP_Head_F_RebirthDefaultA.CP_Head_F_RebirthDefaultA" + "\n")
