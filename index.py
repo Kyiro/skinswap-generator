@@ -1,4 +1,7 @@
 import requests
+import requests_cache
+
+requests_cache.install_cache('cache')
 
 SearchURL = 'https://fortnite-api.com/v2/cosmetics/br/search?backendType=AthenaCharacter&matchMethod=contains&name='
 PropertiesURL = 'https://benbotfn.tk/api/v1/assetProperties?path='
@@ -13,9 +16,11 @@ class GetCP:
             CID = CID + "." + Search['data']['id']
         else:
             HID = name
+            CID = ""
         HSsearch = requests.get(PropertiesURL + HID).json()
         if "/HS_" in HSsearch["export_properties"][0]["Specializations"][0]["assetPath"]:
-            HS = HSsearch["export_properties"][0]["Specializations"][0]["assetPath"]
+            HS = HSsearch["export_properties"][0]["Specializations"][0]["assetPath"].split(".")[0]
+            print(HS)
         else:
             print("Couldn't find the HS")
         CPsearch = requests.get(PropertiesURL + HS).json()
@@ -39,8 +44,8 @@ class GetCP:
         self.CID = CID
 
 print("What skin do you want to Replace?")
-Base = input()
-if Base.lower() == "recruit":
+Base = str(input()).lower()
+if Base == "recruit":
     Base = 1
 else:
     Base = GetCP(Base)
@@ -57,16 +62,16 @@ if len(Replace.array) > 2:
 file = open("output.txt","w+")
 
 file.write("Generated using Kyiro#6468 skin swap tool\n")
-if not Base == 1:
+if Base == 1:
+    file.write("CP_Body_Commando_F_RebirthDefaultA" + "\n")
+    file.write("1P_Body_Commando_F_RebirthDefaultA" + "\n\n")
+    file.write("CP_Athena_Body_M_RebirthSoldier" + "\n")
+    file.write("1P_Athena_Body_M_RebirthSoldier" + "\n\n")
+else:
     file.write(Base.CID + "\n")
     file.write(Replace.CID + "\n\n")
     file.write(Base.replaceCPs[0] + "\n")
     file.write(Base.replaceCPs[1] + "\n\n")
-elif Base == 1:
-    file.write("CP_Body_Commando_F_RebirthDefaultA" + "\n")
-    file.write("1P_Body_Commando_F_RebirthDefaultA" + "\n\n")
-    file.write("CP_Athena_Body_M_RebirthSoldierA" + "\n")
-    file.write("1P_Athena_Body_M_RebirthSoldierA" + "\n\n")
 file.write("/Game/Athena/Heroes/Meshes/Bodies/CP_Body_Commando_F_RebirthDefaultA.CP_Body_Commando_F_RebirthDefaultA" + "\n")
 file.write(Replace.array[0] + "\n\n")
 file.write("/Game/Characters/CharacterParts/Female/Medium/Heads/CP_Head_F_RebirthDefaultA.CP_Head_F_RebirthDefaultA" + "\n")
