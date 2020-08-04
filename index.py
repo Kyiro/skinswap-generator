@@ -20,7 +20,6 @@ class GetCP:
         HSsearch = requests.get(PropertiesURL + HID).json()
         if "/HS_" in HSsearch["export_properties"][0]["Specializations"][0]["assetPath"]:
             HS = HSsearch["export_properties"][0]["Specializations"][0]["assetPath"].split(".")[0]
-            print(HS)
         else:
             print("Couldn't find the HS")
         CPsearch = requests.get(PropertiesURL + HS).json()
@@ -37,13 +36,13 @@ class GetCP:
             else:
                 CPs.insert(3, item)
             x += 1
-        NormalCP = CPs[0].split("/")[-1].split(".")[0]
+        NormalCP = CPs[1].split("/")[-1].split(".")[0]
         BrokenCP = NormalCP.replace("CP_", "1P_")
         self.replaceCPs = [NormalCP, BrokenCP]
         self.array = CPs
         self.CID = CID
 
-print("What skin do you want to Replace?")
+print('What skin do you want to Replace? (use "Recruit" for the default skins)')
 Base = str(input()).lower()
 if Base == "recruit":
     Base = 1
@@ -68,8 +67,6 @@ if Base == 1:
     file.write("CP_Athena_Body_M_RebirthSoldier" + "\n")
     file.write("1P_Athena_Body_M_RebirthSoldier" + "\n\n")
 else:
-    file.write(Base.CID + "\n")
-    file.write(Replace.CID + "\n\n")
     file.write(Base.replaceCPs[0] + "\n")
     file.write(Base.replaceCPs[1] + "\n\n")
 file.write("/Game/Athena/Heroes/Meshes/Bodies/CP_Body_Commando_F_RebirthDefaultA.CP_Body_Commando_F_RebirthDefaultA" + "\n")
