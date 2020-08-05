@@ -60,6 +60,7 @@ if len(Replace.array) > 2:
 
 file = open("output.txt","w+")
 
+file.write("https://github.com/realkyro/skinswap-generator\n")
 file.write("Generated using Kyiro#6468 skin swap tool\n")
 if Base == 1:
     file.write("CP_Body_Commando_F_RebirthDefaultA" + "\n")
