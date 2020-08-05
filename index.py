@@ -36,7 +36,7 @@ class GetCP:
             else:
                 CPs.insert(3, item)
             x += 1
-        NormalCP = CPs[1].split("/")[-1].split(".")[0]
+        NormalCP = CPs[0].split("/")[-1].split(".")[0]
         BrokenCP = NormalCP.replace("CP_", "1P_")
         self.replaceCPs = [NormalCP, BrokenCP]
         self.array = CPs
