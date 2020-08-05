@@ -4,6 +4,7 @@ Automatically generates CP swap codes. That should work perfectly
 # TODO
  1. [x] Fix other skins than the default skin crashing when you play a second game
  2. [ ] Add more things to replace like emotes or pickaxes
+ 3. [ ] Add "custom" skin support
  2. [ ] Maybe port it to something else than Python
  3. [ ] Make a Youtube Tutorial for it
  4. [ ] Clean up the code
